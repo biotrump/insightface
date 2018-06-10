@@ -1,3 +1,4 @@
+#for deploy/benchmark.py
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -43,7 +44,11 @@ class FaceModel:
     prefix = _vec[0]
     epoch = int(_vec[1])
     print('loading',prefix, epoch)
-    ctx = mx.gpu(args.gpu)
+    # gpu only
+    #ctx = mx.gpu(args.gpu)
+    # cpu only
+    ctx = mx.cpu(args.cpu)
+  
     sym, arg_params, aux_params = mx.model.load_checkpoint(prefix, epoch)
     all_layers = sym.get_internals()
     sym = all_layers['fc1_output']

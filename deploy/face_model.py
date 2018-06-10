@@ -1,3 +1,4 @@
+#for test.py
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -27,6 +28,8 @@ def do_flip(data):
 
 def get_model(ctx, image_size, model_str, layer):
   _vec = model_str.split(',')
+  print("_vec=", _vec)
+  print("len(_vec)=", len(_vec))
   assert len(_vec)==2
   prefix = _vec[0]
   epoch = int(_vec[1])
@@ -43,16 +46,27 @@ def get_model(ctx, image_size, model_str, layer):
 class FaceModel:
   def __init__(self, args):
     self.args = args
-    ctx = mx.gpu(args.gpu)
+    if args.cpu == 1:
+      # cpu only
+      #ctx = mx.gpu(args.cpu)
+      ctx = mx.cpu()
+    else:
+      # gpu only
+      ctx = mx.gpu(args.gpu)
     _vec = args.image_size.split(',')
     assert len(_vec)==2
     image_size = (int(_vec[0]), int(_vec[1]))
     self.model = None
     self.ga_model = None
+    print("*** len(args.model)=", len(args.model))
+    print("*** len(args.ga_model)=", len(args.ga_model))
     if len(args.model)>0:
       self.model = get_model(ctx, image_size, args.model, 'fc1')
     if len(args.ga_model)>0:
       self.ga_model = get_model(ctx, image_size, args.ga_model, 'fc1')
+
+    print("self.model:",self.model)
+    print("ga_model:", self.ga_model)
 
     self.threshold = args.threshold
     self.det_minsize = 50
@@ -76,13 +90,14 @@ class FaceModel:
       return None
     bbox = bbox[0,0:4]
     points = points[0,:].reshape((2,5)).T
-    #print(bbox)
-    #print(points)
+    print(bbox)
+    print(points)
     nimg = face_preprocess.preprocess(face_img, bbox, points, image_size='112,112')
     nimg = cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)
     aligned = np.transpose(nimg, (2,0,1))
     return aligned
 
+  #face embed feature
   def get_feature(self, aligned):
     #face_img is bgr image
     #print(nimg.shape)
@@ -94,6 +109,7 @@ class FaceModel:
     embedding = sklearn.preprocessing.normalize(embedding).flatten()
     return embedding
 
+  #get gender and age
   def get_ga(self, aligned):
     #face_img is bgr image
     #print(nimg.shape)

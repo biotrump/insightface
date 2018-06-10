@@ -509,6 +509,7 @@ if __name__ == '__main__':
   parser.add_argument('--model', default='../model/softmax,50', help='path to load model.')
   parser.add_argument('--target', default='lfw,cfp_ff,cfp_fp,agedb_30', help='test targets.')
   parser.add_argument('--gpu', default=0, type=int, help='gpu id')
+  parser.add_argument('--cpu', default=1, type=int, help='cpu id')
   parser.add_argument('--batch-size', default=32, type=int, help='')
   parser.add_argument('--max', default='', type=str, help='')
   parser.add_argument('--mode', default=0, type=int, help='')
@@ -518,7 +519,9 @@ if __name__ == '__main__':
   prop = face_image.load_property(args.data_dir)
   image_size = prop.image_size
   print('image_size', image_size)
-  ctx = mx.gpu(args.gpu)
+  #ctx = mx.gpu(args.gpu)
+  #cpu only
+  ctx = mx.gpu(args.cpu)
   nets = []
   vec = args.model.split(',')
   prefix = args.model.split(',')[0]

@@ -66,12 +66,18 @@ All face images are aligned by [MTCNN](https://kpzhang93.github.io/MTCNN_face_de
 **Note:** If you use the refined [MS1M](https://arxiv.org/abs/1607.08221) dataset and the cropped [VGG2](https://arxiv.org/abs/1710.08092) dataset, please cite the original papers.
 
 ### Train
+$source activate python2
+switch to python2
+
+https://github.com/apache/incubator-mxnet/pull/10646
+
 
 1. Install `MXNet` with GPU support (Python 2.7).
-
 ```
 pip install mxnet-cu80
 ```
+GPU may not work in some PC, so pc version is used with pre-release version.
+pip install mxnet --pre
 
 2. Clone the InsightFace repository. We call the directory insightface as *`INSIGHTFACE_ROOT`*.
 
